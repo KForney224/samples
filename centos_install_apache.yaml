@@ -1,0 +1,25 @@
+- name: Install Apache
+  hosts: all
+  vars:
+    html: |
+      <html>
+      <h1>Default message</h1>
+      </html>
+  
+  tasks:
+  - name: Install the latest version of Apache
+    yum:
+      name: httpd
+      state: latest
+  - name: Create index.html
+    blockinfile:
+      create: yes
+      path: /var/www/html/index.html
+      marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+      block: |
+        {{ html }}
+  - name: Enable and start Apache service
+    service:
+      name: httpd
+      enabled: yes
+      state: started
